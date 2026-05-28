@@ -34,5 +34,5 @@
 ## Phase 6 — Qualité
 - [x] Seed de données démo (2 clients: Garage Schmitt, Boulangerie Dupont)
 - [x] Tests vitest pour les routers principaux (10 tests passés)
-- [ ] Responsive design vérifié
-- [ ] Checkpoint final
+- [x] Responsive design vérifié
+- [x] Checkpoint final (version e68173d9)

@@ -13,10 +13,13 @@ import {
   Bell,
   Shield,
 } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { trpc } from "@/lib/trpc";
 import { useQueryClient } from "@tanstack/react-query";
 import ClientSelector from "./ClientSelector";
+
+const LOGO_URL = "/manus-storage/logo_visigold_final_dc187c8e.webp";
 
 const navItems = [
   { path: "/", label: "Home", icon: LayoutDashboard },
@@ -49,13 +52,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       >
         {/* Logo */}
         <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-100 min-h-[64px]">
-          <div className="flex-shrink-0 w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-            <Shield className="w-4 h-4 text-white" />
+          <div className="flex-shrink-0 w-8 h-8 rounded-lg overflow-hidden">
+            <img src={LOGO_URL} alt="Visigold" className="w-full h-full object-contain" />
           </div>
           {!collapsed && (
             <div className="overflow-hidden">
-              <p className="text-sm font-bold text-gray-900 leading-tight">Swiss Digital</p>
-              <p className="text-xs text-gray-500 leading-tight">Solutions</p>
+              <span className="text-sm font-bold leading-tight">
+                <span className="text-[#1a3a6b]">VISI</span><span className="text-[#f26522]">GOLD</span>
+              </span>
             </div>
           )}
         </div>
@@ -127,8 +131,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <button className="relative p-1.5 rounded-lg hover:bg-blue-500 transition-colors">
               <Bell className="w-4 h-4" />
             </button>
-            <div className="w-7 h-7 bg-blue-400 rounded-full flex items-center justify-center text-xs font-bold">
-              V
+            <div className="w-7 h-7 rounded-full overflow-hidden bg-white flex items-center justify-center">
+              <img src={LOGO_URL} alt="Visigold" className="w-6 h-6 object-contain" />
             </div>
           </div>
         </header>
