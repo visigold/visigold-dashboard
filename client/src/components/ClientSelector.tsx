@@ -22,7 +22,7 @@ export default function ClientSelector() {
         <select
           value={selectedClientId ?? ""}
           onChange={(e) => setSelectedClientId(Number(e.target.value))}
-          className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm font-medium text-gray-800 cursor-pointer hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[200px]"
+          className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 text-sm font-medium text-gray-800 cursor-pointer hover:border-[#1a3a6b] focus:outline-none focus:ring-2 focus:ring-[#1a3a6b] focus:border-transparent min-w-[200px]"
         >
           {!clients || clients.length === 0 ? (
             <option value="">Aucun client</option>
@@ -37,7 +37,11 @@ export default function ClientSelector() {
         <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
       </div>
       {selectedClient && (
-        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+          selectedClient.status === "active"
+            ? "bg-green-100 text-green-700"
+            : "bg-gray-100 text-gray-500"
+        }`}>
           {selectedClient.status === "active" ? "Actif" : "Inactif"}
         </span>
       )}

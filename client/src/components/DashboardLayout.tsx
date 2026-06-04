@@ -21,12 +21,12 @@ import ClientSelector from "./ClientSelector";
 const LOGO_URL = "/manus-storage/logo_visigold_final_dc187c8e.webp";
 
 const navItems = [
-  { path: "/", label: "Home", icon: LayoutDashboard },
+  { path: "/", label: "Accueil", icon: LayoutDashboard },
   { path: "/clients", label: "Clients", icon: Users },
   { path: "/performance", label: "Performance", icon: TrendingUp },
-  { path: "/quiz", label: "Quiz Management", icon: HelpCircle },
-  { path: "/reports", label: "Reports", icon: FileText },
-  { path: "/settings", label: "Settings", icon: Settings },
+  { path: "/quiz", label: "Gestion Quiz", icon: HelpCircle },
+  { path: "/reports", label: "Rapports", icon: FileText },
+  { path: "/settings", label: "Paramètres", icon: Settings },
 ];
 
 interface DashboardLayoutProps {
@@ -100,7 +100,7 @@ export default function DashboardLayout({ children, onLogout }: DashboardLayoutP
           </ul>
         </nav>
 
-        {/* Logout */}
+        {/* Déconnexion */}
         <div className="px-2 pb-4 border-t border-gray-100 pt-3">
           <button
             onClick={handleLogout}
@@ -113,7 +113,7 @@ export default function DashboardLayout({ children, onLogout }: DashboardLayoutP
           </button>
         </div>
 
-        {/* Collapse toggle */}
+        {/* Bouton collapse */}
         <button
           onClick={() => setCollapsed(!collapsed)}
           className="absolute top-1/2 -translate-y-1/2 bg-white border border-gray-200 rounded-full p-1 shadow-sm hover:bg-gray-50 z-30"
@@ -127,16 +127,16 @@ export default function DashboardLayout({ children, onLogout }: DashboardLayoutP
         </button>
       </aside>
 
-      {/* Main content */}
+      {/* Contenu principal */}
       <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
+        {/* En-tête */}
         <header className="bg-[#1a3a6b] text-white px-6 py-3 flex items-center justify-between min-h-[64px] shadow-sm">
           <div className="flex items-center gap-4">
-            <h1 className="text-base font-semibold">Local Reputation Hub — Admin Panel</h1>
+            <h1 className="text-base font-semibold">Tableau de bord — Réputation Locale</h1>
           </div>
           <div className="flex items-center gap-3">
             <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded font-medium flex items-center gap-1">
-              <Shield className="w-3 h-3" /> Confidential
+              <Shield className="w-3 h-3" /> Confidentiel
             </span>
             <button className="relative p-1.5 rounded-lg hover:bg-[#0f2347] transition-colors">
               <Bell className="w-4 h-4" />
@@ -147,12 +147,12 @@ export default function DashboardLayout({ children, onLogout }: DashboardLayoutP
           </div>
         </header>
 
-        {/* Client selector bar */}
+        {/* Sélecteur client */}
         <div className="bg-white border-b border-gray-200 px-6 py-3 flex items-center gap-4">
           <ClientSelector />
         </div>
 
-        {/* Page content */}
+        {/* Contenu de la page */}
         <main className="flex-1 overflow-y-auto p-6 bg-gray-50">
           {children}
         </main>

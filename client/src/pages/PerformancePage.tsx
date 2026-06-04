@@ -34,7 +34,7 @@ export default function PerformancePage() {
   }));
 
   const kpis = [
-    { label: "Total Scans", value: stats?.totalScans ?? 0, icon: Activity, color: "text-blue-600", bg: "bg-blue-50" },
+    { label: "Total scans", value: stats?.totalScans ?? 0, icon: Activity, color: "text-[#1a3a6b]", bg: "bg-blue-50" },
     { label: "Avis générés", value: stats?.totalReviews ?? 0, icon: Star, color: "text-yellow-600", bg: "bg-yellow-50" },
     { label: "Note moyenne", value: stats?.avgRating ?? "0.0", icon: TrendingUp, color: "text-green-600", bg: "bg-green-50" },
     { label: "Taux complétion quiz", value: `${stats?.completionRate ?? 0}%`, icon: CheckSquare, color: "text-purple-600", bg: "bg-purple-50" },
@@ -44,7 +44,7 @@ export default function PerformancePage() {
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">Performance</h2>
 
-      {/* KPI summary */}
+      {/* Résumé KPI */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map(({ label, value, icon: Icon, color, bg }) => (
           <div key={label} className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
@@ -57,10 +57,10 @@ export default function PerformancePage() {
         ))}
       </div>
 
-      {/* Charts */}
+      {/* Graphiques */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-          <h3 className="text-sm font-semibold text-gray-800 mb-4">Trafic de scans mensuel</h3>
+          <h3 className="text-sm font-semibold text-gray-800 mb-4">Évolution des scans mensuels</h3>
           <ResponsiveContainer width="100%" height={220}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
@@ -68,7 +68,7 @@ export default function PerformancePage() {
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="scans" stroke="#3b82f6" strokeWidth={2} dot={{ r: 4 }} name="Scans" />
+              <Line type="monotone" dataKey="scans" stroke="#1a3a6b" strokeWidth={2} dot={{ r: 4 }} name="Scans" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -81,7 +81,7 @@ export default function PerformancePage() {
               <XAxis dataKey="name" tick={{ fontSize: 11 }} />
               <YAxis tick={{ fontSize: 11 }} />
               <Tooltip />
-              <Bar dataKey="scans" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Scans" />
+              <Bar dataKey="scans" fill="#1a3a6b" radius={[4, 4, 0, 0]} name="Scans" />
             </BarChart>
           </ResponsiveContainer>
         </div>

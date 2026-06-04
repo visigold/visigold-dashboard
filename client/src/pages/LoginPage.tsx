@@ -27,7 +27,6 @@ export default function LoginPage({ onSuccess }: Props) {
     setLoading(true);
     setError("");
 
-    // Compare with env variable (available at build time via Vite)
     const expected = import.meta.env.VITE_DASHBOARD_PASSWORD;
 
     setTimeout(() => {
@@ -48,11 +47,11 @@ export default function LoginPage({ onSuccess }: Props) {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <img src={LOGO_URL} alt="Visigold" className="h-16 object-contain mb-4" />
-          <h1 className="text-lg font-bold text-gray-800">Dashboard Admin</h1>
+          <h1 className="text-lg font-bold text-gray-800">Tableau de bord Admin</h1>
           <p className="text-xs text-gray-400 mt-1">Accès réservé à l'équipe Visigold</p>
         </div>
 
-        {/* Form */}
+        {/* Formulaire */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="text-xs font-semibold text-gray-600 mb-1.5 block">
@@ -92,7 +91,7 @@ export default function LoginPage({ onSuccess }: Props) {
             disabled={loading || !password}
             className="w-full bg-[#1a3a6b] hover:bg-[#0f2347] text-white font-semibold py-3 rounded-xl transition-colors disabled:opacity-50 text-sm"
           >
-            {loading ? "Vérification..." : "Accéder au dashboard"}
+            {loading ? "Vérification..." : "Accéder au tableau de bord"}
           </button>
         </form>
 

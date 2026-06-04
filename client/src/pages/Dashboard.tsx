@@ -15,7 +15,7 @@ import { toast } from "sonner";
 import QuizManagementPanel from "@/components/QuizManagementPanel";
 import InteractionLogsPanel from "@/components/InteractionLogsPanel";
 
-// ─── Circular Progress ────────────────────────────────────────────────────────
+// ─── Jauge circulaire ─────────────────────────────────────────────────────────
 function CircularProgress({ value }: { value: number }) {
   const radius = 40;
   const circumference = 2 * Math.PI * radius;
@@ -43,7 +43,7 @@ function CircularProgress({ value }: { value: number }) {
   );
 }
 
-// ─── Rating Gauge ─────────────────────────────────────────────────────────────
+// ─── Jauge note ───────────────────────────────────────────────────────────────
 function RatingGauge({ value }: { value: number }) {
   const pct = (value / 5) * 100;
   const color = pct >= 80 ? "#22c55e" : pct >= 60 ? "#f59e0b" : "#ef4444";
@@ -68,7 +68,7 @@ function RatingGauge({ value }: { value: number }) {
   );
 }
 
-// ─── Main Dashboard ───────────────────────────────────────────────────────────
+// ─── Dashboard principal ──────────────────────────────────────────────────────
 export default function Dashboard() {
   const { selectedClientId } = useClientContext();
   const currentMonth = new Date().toISOString().slice(0, 7);
@@ -106,7 +106,6 @@ export default function Dashboard() {
   const avgRating = parseFloat(stats?.avgRating ?? "0");
   const completionRate = stats?.completionRate ?? 0;
 
-  // Format month labels
   const monthLabels: Record<string, string> = {
     "01": "Jan", "02": "Fév", "03": "Mar", "04": "Avr",
     "05": "Mai", "06": "Jun", "07": "Jul", "08": "Aoû",
@@ -119,17 +118,17 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+      <h2 className="text-2xl font-bold text-gray-900">Tableau de bord</h2>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Left column: KPIs + Logs */}
+        {/* Colonne gauche : KPIs + Logs */}
         <div className="xl:col-span-2 space-y-6">
-          {/* KPI Cards */}
+          {/* Cartes KPI */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Monthly Scan Traffic */}
+            {/* Trafic scans mensuel */}
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm md:col-span-1">
               <p className="text-sm font-semibold text-gray-700 leading-tight">
-                Monthly Scan Traffic
+                Scans QR mensuels
                 <br />
                 <span className="text-xs font-normal text-gray-400">({clientName})</span>
               </p>
@@ -155,11 +154,11 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Google Reviews */}
+            {/* Avis Google */}
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex flex-col items-center justify-center">
               <p className="text-sm font-semibold text-gray-700 flex items-center gap-1">
                 <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                Google Reviews Generated
+                Avis Google générés
               </p>
               <p className="text-4xl font-bold text-gray-900 mt-2">{totalReviews}</p>
               <p className="text-xs text-gray-400 mt-1">Nouveaux avis ce mois</p>
@@ -169,10 +168,10 @@ export default function Dashboard() {
               <p className="text-xs text-gray-400 mt-1">Note moyenne</p>
             </div>
 
-            {/* Quiz Completion Rate */}
+            {/* Taux complétion quiz */}
             <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm flex flex-col items-center justify-center">
               <p className="text-sm font-semibold text-gray-700 text-center">
-                Quiz Completion Rate
+                Taux de complétion quiz
               </p>
               <div className="mt-4">
                 <CircularProgress value={completionRate || 88} />
@@ -180,11 +179,11 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Interaction Logs */}
+          {/* Logs d'interaction */}
           <InteractionLogsPanel clientId={selectedClientId} />
         </div>
 
-        {/* Right column: Quiz Management + Monthly Report */}
+        {/* Colonne droite : Quiz + Rapport */}
         <div className="space-y-6">
           <QuizManagementPanel
             clientId={selectedClientId}
@@ -194,10 +193,10 @@ export default function Dashboard() {
             consentText={clientData?.consentText}
           />
 
-          {/* Monthly Report */}
+          {/* Rapport mensuel */}
           <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
             <h3 className="text-sm font-semibold text-gray-800 mb-3">
-              Monthly Report ({new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" })})
+              Rapport mensuel ({new Date().toLocaleDateString("fr-FR", { month: "long", year: "numeric" })})
             </h3>
             <div className="flex items-center gap-3">
               <button
@@ -205,14 +204,14 @@ export default function Dashboard() {
                   generateReport.mutate({ clientId: selectedClientId, month: currentMonth })
                 }
                 disabled={generateReport.isPending}
-                className="flex-1 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
+                className="flex-1 flex items-center justify-center gap-2 bg-[#1a3a6b] hover:bg-[#0f2347] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors disabled:opacity-50"
               >
                 {generateReport.isPending ? (
                   <RefreshCw className="w-4 h-4 animate-spin" />
                 ) : (
                   <FileText className="w-4 h-4" />
                 )}
-                Generate PDF
+                Générer le rapport
               </button>
               <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
                 <FileText className="w-5 h-5 text-red-500" />

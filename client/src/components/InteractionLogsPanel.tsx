@@ -8,10 +8,10 @@ interface Props {
 
 const eventTypeLabels: Record<string, string> = {
   scan: "Scan via",
-  quiz_completed: "Quiz Completed",
-  quiz_started: "Quiz Started",
-  review_click: "Clicked",
-  review_generated: "Review Generated",
+  quiz_completed: "Quiz complété",
+  quiz_started: "Quiz démarré",
+  review_click: "Clic vers",
+  review_generated: "Avis généré",
 };
 
 export default function InteractionLogsPanel({ clientId }: Props) {
@@ -20,7 +20,7 @@ export default function InteractionLogsPanel({ clientId }: Props) {
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
       <h3 className="text-sm font-semibold text-gray-800 mb-4">
-        Recent Interaction Logs (Anonymized)
+        Dernières interactions (anonymisées)
       </h3>
 
       {isLoading ? (
@@ -31,7 +31,7 @@ export default function InteractionLogsPanel({ clientId }: Props) {
         </div>
       ) : !logs || logs.length === 0 ? (
         <div className="text-center py-8 text-gray-400 text-sm">
-          Aucun log d'interaction pour ce client.
+          Aucune interaction enregistrée pour ce client.
         </div>
       ) : (
         <div className="divide-y divide-gray-100">
