@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { LOGO_BASE64 } from "./logoBase64";
 
 interface ReportData {
   clientName: string;
@@ -31,18 +32,24 @@ export function generateMonthlyPDF(data: ReportData): void {
   doc.setFillColor(26, 58, 107); // #1a3a6b
   doc.rect(0, 0, pageW, 45, "F");
 
-  // ─── Title ────────────────────────────────────────────────────────────────
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(22);
-  doc.setFont("helvetica", "bold");
-  doc.text("VISIGOLD", margin, 20);
+  // ─── Logo + Title ─────────────────────────────────────────────────────────
+  // Logo image Visigold
+  try {
+    doc.addImage(LOGO_BASE64, "PNG", margin, 7, 42, 13);
+  } catch {
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.text("VISIGOLD", margin, 20);
+  }
 
+  doc.setTextColor(255, 255, 255);
   doc.setFontSize(11);
   doc.setFont("helvetica", "normal");
-  doc.text("Rapport mensuel de performance", margin, 30);
+  doc.text("Rapport mensuel de performance", margin, 28);
 
   doc.setFontSize(10);
-  doc.text(`${data.clientName}  —  ${formatMonth(data.month)}`, margin, 39);
+  doc.text(`${data.clientName}  —  ${formatMonth(data.month)}`, margin, 37);
 
   // ─── Generated date ───────────────────────────────────────────────────────
   doc.setTextColor(200, 200, 200);
