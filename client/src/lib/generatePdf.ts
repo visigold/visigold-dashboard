@@ -32,24 +32,38 @@ export function generateMonthlyPDF(data: ReportData): void {
   doc.setFillColor(26, 58, 107); // #1a3a6b
   doc.rect(0, 0, pageW, 45, "F");
 
-  // ─── Logo + Title ─────────────────────────────────────────────────────────
-  // Logo image Visigold
-  try {
-    doc.addImage(LOGO_BASE64, "PNG", margin, 7, 42, 13);
-  } catch {
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(20);
-    doc.setFont("helvetica", "bold");
-    doc.text("VISIGOLD", margin, 20);
-  }
-
+  // ─── Header : texte gauche + logo droite ──────────────────────────────────
+  // Titre en haut à gauche (gras)
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(11);
-  doc.setFont("helvetica", "normal");
-  doc.text("Rapport mensuel de performance", margin, 28);
+  doc.setFontSize(13);
+  doc.setFont("helvetica", "bold");
+  doc.text("Rapport mensuel de performance", margin, 16);
 
+  // Nom du client
   doc.setFontSize(10);
-  doc.text(`${data.clientName}  —  ${formatMonth(data.month)}`, margin, 37);
+  doc.setFont("helvetica", "normal");
+  doc.text(`${data.clientName}  —  ${formatMonth(data.month)}`, margin, 25);
+
+  // Date de génération
+  doc.setTextColor(192, 207, 232);
+  doc.setFontSize(8);
+  doc.text(`Généré le ${new Date().toLocaleDateString("fr-FR")}`, margin, 33);
+
+  // Logo Visigold — à droite, fond blanc arrondi
+  const logoW = 48;
+  const logoH = 16;
+  const logoX = pageW - margin - logoW;
+  const logoY = 5;
+  doc.setFillColor(255, 255, 255);
+  doc.roundedRect(logoX - 3, logoY - 2, logoW + 6, logoH + 4, 2, 2, "F");
+  try {
+    doc.addImage(LOGO_BASE64, "PNG", logoX, logoY, logoW, logoH);
+  } catch {
+    doc.setTextColor(26, 58, 107);
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text("VISIGOLD", logoX + 4, logoY + 11);
+  }
 
   // ─── Generated date ───────────────────────────────────────────────────────
   doc.setTextColor(200, 200, 200);
