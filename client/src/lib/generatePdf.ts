@@ -9,6 +9,7 @@ interface ReportData {
   avgRating: string | number;
   completionRate: number;
   scanTraffic: { month: string; scans: number }[];
+  comment?: string;
 }
 
 const MONTH_LABELS: Record<string, string> = {
@@ -168,6 +169,30 @@ export function generateMonthlyPDF(data: ReportData): void {
   summaryLines.forEach((line, i) => {
     doc.text(line, margin + 5, summaryY + 20 + i * 7);
   });
+
+  // ─── Commentaire personnalisé ────────────────────────────────────────────
+  if (data.comment && data.comment.trim()) {
+    const commentY = 210;
+    doc.setFillColor(255, 247, 237); // orange très clair
+    doc.roundedRect(margin, commentY, contentW, 30, 3, 3, "F");
+    doc.setDrawColor(242, 101, 34);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(margin, commentY, contentW, 30, 3, 3, "S");
+    // Barre orange gauche
+    doc.setFillColor(242, 101, 34);
+    doc.roundedRect(margin, commentY, 3, 30, 1, 1, "F");
+    // Titre
+    doc.setTextColor(242, 101, 34);
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "bold");
+    doc.text("💬 Message de votre conseiller Visigold", margin + 7, commentY + 8);
+    // Texte du commentaire
+    doc.setTextColor(55, 65, 81);
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    const lines = doc.splitTextToSize(data.comment, contentW - 14);
+    doc.text(lines.slice(0, 2), margin + 7, commentY + 16);
+  }
 
   // ─── Footer ───────────────────────────────────────────────────────────────
   doc.setFillColor(26, 58, 107);

@@ -12,6 +12,7 @@ export default function ReportsPage() {
   const currentMonth = new Date().toISOString().slice(0, 7);
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [comment, setComment] = useState("");
 
   const { data: reports, refetch } = trpc.reports.list.useQuery(
     { clientId: selectedClientId! },
@@ -51,6 +52,7 @@ export default function ReportsPage() {
         avgRating: result.avgRating.toFixed(1),
         completionRate: Math.round(result.completionRate),
         scanTraffic: stats?.scanTraffic ?? [],
+        comment: comment.trim() || undefined,
       });
       toast.success("PDF téléchargé avec succès !");
     } catch {
@@ -94,6 +96,27 @@ export default function ReportsPage() {
       {/* Generate section */}
       <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
         <h3 className="text-sm font-semibold text-gray-800 mb-4">Générer un rapport mensuel PDF</h3>
+
+        {/* Champ commentaire personnalisé */}
+        <div className="mb-4">
+          <label className="text-xs font-medium text-gray-600 mb-1 block flex items-center gap-1">
+            💬 Message personnalisé pour le client
+            <span className="text-gray-400 font-normal ml-1">(optionnel — apparaitra dans le PDF)</span>
+          </label>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="Ex: Bravo pour votre note de 4.8 ce mois-ci ! Vos clients apprécient particulièrement votre accueil. Continuez ainsi !"
+            rows={3}
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#f26522] resize-none"
+          />
+          {comment.trim() && (
+            <p className="text-xs text-[#f26522] mt-1 font-medium">
+              ✓ Ce message apparaîtra dans une zone encadrée orange dans le PDF.
+            </p>
+          )}
+        </div>
+
         <div className="flex items-end gap-4">
           <div>
             <label className="text-xs font-medium text-gray-600 mb-1 block">Mois</label>
