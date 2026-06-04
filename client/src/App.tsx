@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -12,10 +13,11 @@ import PerformancePage from "./pages/PerformancePage";
 import QuizPage from "./pages/QuizPage";
 import ReportsPage from "./pages/ReportsPage";
 import SettingsPage from "./pages/SettingsPage";
+import LoginPage, { isAuthenticated, logout } from "./pages/LoginPage";
 
-function Router() {
+function Router({ onLogout }: { onLogout: () => void }) {
   return (
-    <DashboardLayout>
+    <DashboardLayout onLogout={onLogout}>
       <Switch>
         <Route path="/" component={Dashboard} />
         <Route path="/clients" component={ClientsPage} />
@@ -31,13 +33,28 @@ function Router() {
 }
 
 function App() {
+  const [authenticated, setAuthenticated] = useState(false);
+
+  useEffect(() => {
+    setAuthenticated(isAuthenticated());
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setAuthenticated(false);
+  };
+
   return (
     <ErrorBoundary>
       <ThemeProvider defaultTheme="light">
         <ClientProvider>
           <TooltipProvider>
             <Toaster />
-            <Router />
+            {authenticated ? (
+              <Router onLogout={handleLogout} />
+            ) : (
+              <LoginPage onSuccess={() => setAuthenticated(true)} />
+            )}
           </TooltipProvider>
         </ClientProvider>
       </ThemeProvider>

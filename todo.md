@@ -36,3 +36,11 @@
 - [x] Tests vitest pour les routers principaux (10 tests passés)
 - [x] Responsive design vérifié
 - [x] Checkpoint final (version e68173d9)
+
+## Phase 7 — Sécurité, URL et QR Code
+- [ ] Page de login avec mot de passe (protection accès dashboard)
+- [ ] Session persistante après login (localStorage ou cookie)
+- [ ] Endpoint public /scan/:clientSlug pour enregistrer les scans QR code
+- [ ] Paramètre source dans l'URL QR code (?source=comptoir, ?source=vitrine, etc.)
+- [ ] Redirection automatique vers Google Reviews après scan
+- [ ] Republier sur URL fixe
