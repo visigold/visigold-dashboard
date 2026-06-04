@@ -53,3 +53,11 @@
 - [x] Page de remerciement personnalisée après scan QR code
 - [x] Configuration email notifications (Settings page)
 - [x] Toggle alerte avis négatif (configurable dans Settings)
+
+## Phase 9 — Conformité LPD (préparation collecte leads)
+- [x] Ajouter colonnes privacyPolicyUrl et leadCollectionEnabled dans la table clients
+- [x] Champ URL politique de confidentialité dans la fiche client (page Clients → Modifier)
+- [x] Toggle activation collecte leads par client
+- [x] Case à cocher consentement dans le module Quiz Management
+- [x] Page de remerciement QR scan avec nom du client personnalisé
+- [x] Checkpoint final LPD

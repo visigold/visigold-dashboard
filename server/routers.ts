@@ -58,6 +58,9 @@ const clientsRouter = router({
         city: z.string().optional(),
         googlePlaceId: z.string().optional(),
         status: z.enum(["active", "inactive"]).optional(),
+        privacyPolicyUrl: z.string().optional(),
+        leadCollectionEnabled: z.boolean().optional(),
+        consentText: z.string().optional(),
       })
     )
     .mutation(async ({ input }) => {

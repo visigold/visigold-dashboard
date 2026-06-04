@@ -103,7 +103,7 @@ function QRModal({ client, onClose }: { client: { id: number; name: string; slug
 }
 
 function EditClientModal({ client, onClose, onSaved }: {
-  client: { id: number; name: string; slug: string; industry?: string | null; city?: string | null; googlePlaceId?: string | null };
+  client: { id: number; name: string; slug: string; industry?: string | null; city?: string | null; googlePlaceId?: string | null; privacyPolicyUrl?: string | null; leadCollectionEnabled?: boolean; consentText?: string | null };
   onClose: () => void;
   onSaved: () => void;
 }) {
@@ -112,6 +112,9 @@ function EditClientModal({ client, onClose, onSaved }: {
     industry: client.industry ?? "",
     city: client.city ?? "",
     googlePlaceId: client.googlePlaceId ?? "",
+    privacyPolicyUrl: client.privacyPolicyUrl ?? "",
+    leadCollectionEnabled: client.leadCollectionEnabled ?? false,
+    consentText: client.consentText ?? "J'accepte que mes réponses soient utilisées pour améliorer nos services.",
   });
 
   const updateMutation = trpc.clients.update.useMutation({
@@ -158,6 +161,51 @@ function EditClientModal({ client, onClose, onSaved }: {
             <p className="text-xs text-gray-400 mt-1">
               Trouvez-le sur <a href="https://developers.google.com/maps/documentation/places/web-service/place-id" target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Google Place ID Finder</a>
             </p>
+          </div>
+
+          {/* Section LPD */}
+          <div className="border-t border-gray-100 pt-3 mt-1">
+            <p className="text-xs font-semibold text-[#1a3a6b] mb-2 flex items-center gap-1">
+              🛡️ Conformité LPD — Collecte de leads
+            </p>
+            <label className="flex items-center gap-3 cursor-pointer mb-3">
+              <div
+                onClick={() => setForm({ ...form, leadCollectionEnabled: !form.leadCollectionEnabled })}
+                className={`w-10 h-5 rounded-full transition-colors flex items-center px-0.5 cursor-pointer ${
+                  form.leadCollectionEnabled ? "bg-[#f26522]" : "bg-gray-200"
+                }`}
+              >
+                <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform ${
+                  form.leadCollectionEnabled ? "translate-x-5" : "translate-x-0"
+                }`} />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-700">Activer la collecte de leads</p>
+                <p className="text-xs text-gray-400">Affiche une case de consentement dans le quiz</p>
+              </div>
+            </label>
+            {form.leadCollectionEnabled && (
+              <>
+                <div className="mb-2">
+                  <label className="text-xs font-medium text-gray-600 mb-1 block">
+                    URL Politique de confidentialité
+                  </label>
+                  <input value={form.privacyPolicyUrl} onChange={(e) => setForm({ ...form, privacyPolicyUrl: e.target.value })}
+                    className="w-full border border-orange-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#f26522]"
+                    placeholder="https://visigold.ch/confidentialite" />
+                  <p className="text-xs text-gray-400 mt-0.5">Lien vers votre politique de confidentialité (obligatoire LPD)</p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-gray-600 mb-1 block">
+                    Texte de consentement
+                  </label>
+                  <textarea value={form.consentText} onChange={(e) => setForm({ ...form, consentText: e.target.value })}
+                    className="w-full border border-orange-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#f26522] resize-none"
+                    rows={2}
+                    placeholder="J'accepte que mes réponses soient utilisées pour améliorer nos services." />
+                </div>
+              </>
+            )}
           </div>
         </div>
 

@@ -38,6 +38,9 @@ export default function QuizPage() {
         <QuizManagementPanel
           clientId={selectedClientId}
           clientName={clientData?.name ?? "Client"}
+          leadCollectionEnabled={clientData?.leadCollectionEnabled}
+          privacyPolicyUrl={clientData?.privacyPolicyUrl}
+          consentText={clientData?.consentText}
         />
 
         {/* Résultats des réponses */}

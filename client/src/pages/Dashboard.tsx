@@ -186,7 +186,13 @@ export default function Dashboard() {
 
         {/* Right column: Quiz Management + Monthly Report */}
         <div className="space-y-6">
-          <QuizManagementPanel clientId={selectedClientId} clientName={clientName} />
+          <QuizManagementPanel
+            clientId={selectedClientId}
+            clientName={clientName}
+            leadCollectionEnabled={clientData?.leadCollectionEnabled}
+            privacyPolicyUrl={clientData?.privacyPolicyUrl}
+            consentText={clientData?.consentText}
+          />
 
           {/* Monthly Report */}
           <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">

@@ -34,6 +34,9 @@ export const clients = mysqlTable("clients", {
   city: varchar("city", { length: 100 }),
   googlePlaceId: varchar("googlePlaceId", { length: 255 }),
   status: mysqlEnum("status", ["active", "inactive"]).default("active").notNull(),
+  privacyPolicyUrl: varchar("privacyPolicyUrl", { length: 500 }),
+  leadCollectionEnabled: boolean("leadCollectionEnabled").default(false).notNull(),
+  consentText: text("consentText"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });

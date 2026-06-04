@@ -6,9 +6,12 @@ import { toast } from "sonner";
 interface Props {
   clientId: number;
   clientName: string;
+  leadCollectionEnabled?: boolean;
+  privacyPolicyUrl?: string | null;
+  consentText?: string | null;
 }
 
-export default function QuizManagementPanel({ clientId, clientName }: Props) {
+export default function QuizManagementPanel({ clientId, clientName, leadCollectionEnabled, privacyPolicyUrl, consentText }: Props) {
   const { data: quiz, refetch } = trpc.quiz.getActive.useQuery({ clientId });
   const updateMutation = trpc.quiz.updateQuestion.useMutation({
     onSuccess: () => {
@@ -131,6 +134,27 @@ export default function QuizManagementPanel({ clientId, clientName }: Props) {
             <p className="text-[10px] text-gray-400 mt-2 text-center">
               Aucun quiz actif pour ce client.
             </p>
+          )}
+
+          {/* Section consentement LPD */}
+          {leadCollectionEnabled && (
+            <div className="mt-3 border-t border-orange-100 pt-3">
+              <p className="text-[9px] font-semibold text-[#f26522] mb-1.5 flex items-center gap-1">
+                🛡️ Collecte de leads activée
+              </p>
+              <div className="bg-orange-50 rounded-lg p-2">
+                <div className="flex items-start gap-1.5">
+                  <div className="w-3 h-3 border border-orange-400 rounded flex-shrink-0 mt-0.5 bg-white" />
+                  <p className="text-[9px] text-gray-600 leading-tight">
+                    {consentText || "J'accepte que mes réponses soient utilisées pour améliorer nos services."}
+                    {privacyPolicyUrl && (
+                      <> <a href={privacyPolicyUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">Politique de confidentialité</a></>
+                    )}
+                  </p>
+                </div>
+              </div>
+              <p className="text-[8px] text-orange-500 mt-1">✓ Conforme LPD suisse</p>
+            </div>
           )}
         </div>
       </div>
