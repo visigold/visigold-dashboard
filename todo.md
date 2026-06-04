@@ -38,9 +38,18 @@
 - [x] Checkpoint final (version e68173d9)
 
 ## Phase 7 — Sécurité, URL et QR Code
-- [ ] Page de login avec mot de passe (protection accès dashboard)
-- [ ] Session persistante après login (localStorage ou cookie)
-- [ ] Endpoint public /scan/:clientSlug pour enregistrer les scans QR code
-- [ ] Paramètre source dans l'URL QR code (?source=comptoir, ?source=vitrine, etc.)
-- [ ] Redirection automatique vers Google Reviews après scan
-- [ ] Republier sur URL fixe
+- [x] Page de login avec mot de passe (protection accès dashboard)
+- [x] Session persistante après login (localStorage)
+- [x] Endpoint public /scan/:clientSlug pour enregistrer les scans QR code
+- [x] Paramètre source dans l'URL QR code (?source=comptoir, ?source=vitrine, etc.)
+- [x] Redirection automatique vers Google Reviews après scan (si googlePlaceId configuré)
+- [x] Republier sur URL fixe (via bouton Publish)
+
+## Phase 8 — Finalisation opérationnelle
+- [x] Saisie Google Place ID depuis la page Clients (champ éditable)
+- [x] Générateur QR code intégré par client et par source
+- [x] Génération PDF réelle du rapport mensuel (téléchargeable)
+- [x] Affichage des réponses aux quiz (graphique résultats)
+- [x] Page de remerciement personnalisée après scan QR code
+- [x] Configuration email notifications (Settings page)
+- [x] Toggle alerte avis négatif (configurable dans Settings)

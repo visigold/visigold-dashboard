@@ -146,3 +146,18 @@ export const monthlyReports = mysqlTable("monthly_reports", {
 
 export type MonthlyReport = typeof monthlyReports.$inferSelect;
 export type InsertMonthlyReport = typeof monthlyReports.$inferInsert;
+
+// ─── Quiz Answers ────────────────────────────────────────────────────────────────────────────────
+export const quizAnswers = mysqlTable("quiz_answers", {
+  id: int("id").autoincrement().primaryKey(),
+  clientId: int("clientId").notNull(),
+  quizId: int("quizId").notNull(),
+  questionId: int("questionId").notNull(),
+  optionId: int("optionId").notNull(),
+  optionLabel: varchar("optionLabel", { length: 255 }).notNull(),
+  month: varchar("month", { length: 7 }).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type QuizAnswer = typeof quizAnswers.$inferSelect;
+export type InsertQuizAnswer = typeof quizAnswers.$inferInsert;

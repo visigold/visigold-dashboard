@@ -49,10 +49,12 @@ async function startServer() {
       const { eq } = await import("drizzle-orm");
 
       const db = await getDb();
+      let clientName = "notre établissement";
       if (db) {
         // Trouver le client par slug
         const clientResult = await db.select().from(clients).where(eq(clients.slug, clientSlug)).limit(1);
         if (clientResult[0]) {
+          clientName = clientResult[0].name;
           const clientId = clientResult[0].id;
           // Enregistrer le scan
           await db.insert(scanEvents).values({
@@ -75,8 +77,43 @@ async function startServer() {
           }
         }
       }
-      // Fallback : page de confirmation simple
-      res.send(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Merci !</title><style>body{font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#f8f9fa}.box{text-align:center;padding:2rem;background:white;border-radius:1rem;box-shadow:0 4px 24px rgba(0,0,0,.08)}.logo{font-size:1.5rem;font-weight:bold;margin-bottom:1rem}.visi{color:#1a3a6b}.gold{color:#f26522}</style></head><body><div class="box"><div class="logo"><span class="visi">VISI</span><span class="gold">GOLD</span></div><p>Merci pour votre visite !</p><p style="color:#888;font-size:.9rem">Votre avis a bien été enregistré.</p></div></body></html>`);
+      // Page de remerciement personnalisée
+      res.send(`<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Merci !</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; min-height: 100vh; background: linear-gradient(135deg, #1a3a6b 0%, #0f2347 100%); display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    .card { background: white; border-radius: 1.5rem; padding: 2.5rem 2rem; max-width: 380px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.3); }
+    .logo { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.25rem; }
+    .visi { color: #1a3a6b; } .gold { color: #f26522; }
+    .check { width: 64px; height: 64px; background: #f0fdf4; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 1.5rem auto 1rem; }
+    .check svg { width: 32px; height: 32px; }
+    h1 { font-size: 1.25rem; font-weight: 700; color: #1a3a6b; margin-bottom: 0.5rem; }
+    .subtitle { color: #6b7280; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem; }
+    .client-name { font-weight: 600; color: #f26522; }
+    .stars { font-size: 1.5rem; letter-spacing: 2px; margin-bottom: 1rem; }
+    .footer { font-size: 0.7rem; color: #d1d5db; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo"><span class="visi">VISI</span><span class="gold">GOLD</span></div>
+    <div class="check">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div class="stars">⭐⭐⭐⭐⭐</div>
+    <h1>Merci pour votre visite !</h1>
+    <p class="subtitle">Votre passage chez <span class="client-name">${clientName}</span> a été enregistré.<br>Votre avis compte beaucoup pour nous.</p>
+    <p class="footer">© ${new Date().getFullYear()} Visigold — Gestion de réputation locale</p>
+  </div>
+</body>
+</html>`);
     } catch (err) {
       console.error("[QR Scan] Error:", err);
       res.status(500).send("Erreur lors de l'enregistrement du scan.");

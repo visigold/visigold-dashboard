@@ -13,6 +13,7 @@ import {
   quizSessions,
   interactionLogs,
   monthlyReports,
+  quizAnswers,
 } from "../drizzle/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { z } from "zod";
@@ -288,7 +289,31 @@ const reportsRouter = router({
     }),
 });
 
-// ─── App Router ───────────────────────────────────────────────────────────────
+// ─── Quiz Answers Router ────────────────────────────────────────────────────────────
+const quizAnswersRouter = router({
+  results: protectedProcedure
+    .input(z.object({ clientId: z.number(), month: z.string().optional() }))
+    .query(async ({ input }) => {
+      const db = await getDb();
+      if (!db) return [];
+      const month = input.month ?? new Date().toISOString().slice(0, 7);
+      const answers = await db
+        .select({
+          optionLabel: quizAnswers.optionLabel,
+          count: sql<number>`count(*)`,
+        })
+        .from(quizAnswers)
+        .where(and(eq(quizAnswers.clientId, input.clientId), eq(quizAnswers.month, month)))
+        .groupBy(quizAnswers.optionLabel)
+        .orderBy(desc(sql<number>`count(*)`));
+      return answers.map((a: { optionLabel: string; count: number }) => ({
+        label: a.optionLabel,
+        count: Number(a.count),
+      }));
+    }),
+});
+
+// ─── App Router ────────────────────────────────────────────────────────────────────────────────
 export const appRouter = router({
   system: systemRouter,
   auth: router({
@@ -302,6 +327,7 @@ export const appRouter = router({
   clients: clientsRouter,
   dashboard: dashboardRouter,
   quiz: quizRouter,
+  quizAnswers: quizAnswersRouter,
   logs: logsRouter,
   reports: reportsRouter,
 });
