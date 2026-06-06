@@ -29,9 +29,18 @@ export default function LoginPage({ onSuccess }: Props) {
 
     const expected = import.meta.env.VITE_DASHBOARD_PASSWORD;
 
-    setTimeout(() => {
+    setTimeout(async () => {
       if (password === expected) {
         localStorage.setItem(SESSION_KEY, "true");
+        // Envoyer le cookie de session au serveur
+        try {
+          await fetch("/api/session", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ token: "authenticated" }),
+          });
+        } catch {}
         onSuccess();
       } else {
         setError("Mot de passe incorrect. Veuillez réessayer.");

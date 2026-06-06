@@ -8,16 +8,37 @@ export type TrpcContext = {
   user: User | null;
 };
 
+// Utilisateur admin fictif pour l'authentification par mot de passe dashboard
+const DASHBOARD_ADMIN_USER: User = {
+  id: 1,
+  openId: "visigold-admin",
+  name: "Visigold Admin",
+  email: "contact@visigold.ch",
+  loginMethod: "password",
+  role: "admin",
+  createdAt: new Date(),
+  updatedAt: new Date(),
+  lastSignedIn: new Date(),
+};
+
 export async function createContext(
   opts: CreateExpressContextOptions
 ): Promise<TrpcContext> {
   let user: User | null = null;
 
-  try {
-    user = await sdk.authenticateRequest(opts.req);
-  } catch (error) {
-    // Authentication is optional for public procedures.
-    user = null;
+  // Vérifier le cookie de session du dashboard (mot de passe)
+  const cookieHeader = opts.req.headers.cookie || "";
+  const sessionCookie = cookieHeader.split(";").find(c => c.trim().startsWith("visigold_session="))?.split("=")[1]?.trim();
+
+  if (sessionCookie === "authenticated") {
+    user = DASHBOARD_ADMIN_USER;
+  } else {
+    // Fallback: essayer l'authentification OAuth Manus
+    try {
+      user = await sdk.authenticateRequest(opts.req);
+    } catch (error) {
+      user = null;
+    }
   }
 
   return {

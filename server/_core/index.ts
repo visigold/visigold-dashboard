@@ -121,6 +121,27 @@ async function startServer() {
   });
 
   // tRPC API
+  // Route de session pour l'authentification par mot de passe
+  app.post("/api/session", (req, res) => {
+    const { token } = req.body || {};
+    if (token === "authenticated") {
+      res.cookie("visigold_session", "authenticated", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+      res.json({ success: true });
+    } else {
+      res.status(401).json({ success: false });
+    }
+  });
+
+  app.delete("/api/session", (_req, res) => {
+    res.clearCookie("visigold_session");
+    res.json({ success: true });
+  });
+
   app.use(
     "/api/trpc",
     createExpressMiddleware({
