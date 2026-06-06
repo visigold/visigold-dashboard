@@ -18,7 +18,7 @@ import { trpc } from "@/lib/trpc";
 import { useQueryClient } from "@tanstack/react-query";
 import ClientSelector from "./ClientSelector";
 
-const LOGO_URL = "/manus-storage/logo_visigold_final_dc187c8e.webp";
+const LOGO_URL = "/logo_visigold.webp";
 
 const navItems = [
   { path: "/", label: "Accueil", icon: LayoutDashboard },

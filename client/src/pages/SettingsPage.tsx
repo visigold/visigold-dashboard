@@ -3,7 +3,7 @@ import { trpc } from "@/lib/trpc";
 import { Shield, User, Database, Globe, Mail, Bell, Save, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 
-const LOGO_URL = "/manus-storage/logo_visigold_final_dc187c8e.webp";
+const LOGO_URL = "/logo_visigold.webp";
 
 export default function SettingsPage() {
   const { data: user } = trpc.auth.me.useQuery();

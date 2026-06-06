@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff, Lock } from "lucide-react";
 
-const LOGO_URL = "/manus-storage/logo_visigold_final_dc187c8e.webp";
+const LOGO_URL = "/logo_visigold.webp";
 const SESSION_KEY = "visigold_auth";
 
 export function isAuthenticated(): boolean {
