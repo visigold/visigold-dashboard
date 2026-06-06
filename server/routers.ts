@@ -1,7 +1,7 @@
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, publicProcedure, router } from "./_core/trpc";
 import { getDb } from "./db";
 import {
   clients,
@@ -20,12 +20,12 @@ import { z } from "zod";
 
 // ─── Clients Router ───────────────────────────────────────────────────────────
 const clientsRouter = router({
-  list: protectedProcedure.query(async () => {
+  list: publicProcedure.query(async () => {
     const db = await getDb();
     if (!db) return [];
     return db.select().from(clients).orderBy(clients.name);
   }),
-  get: protectedProcedure
+  get: publicProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
@@ -33,7 +33,7 @@ const clientsRouter = router({
       const result = await db.select().from(clients).where(eq(clients.id, input.id)).limit(1);
       return result[0] ?? null;
     }),
-  create: protectedProcedure
+  create: publicProcedure
     .input(
       z.object({
         name: z.string().min(1),
@@ -49,7 +49,7 @@ const clientsRouter = router({
       await db.insert(clients).values(input);
       return { success: true };
     }),
-  update: protectedProcedure
+  update: publicProcedure
     .input(
       z.object({
         id: z.number(),
@@ -74,7 +74,7 @@ const clientsRouter = router({
 
 // ─── Dashboard Router ─────────────────────────────────────────────────────────
 const dashboardRouter = router({
-  stats: protectedProcedure
+  stats: publicProcedure
     .input(z.object({ clientId: z.number(), month: z.string().optional() }))
     .query(async ({ input }) => {
       const db = await getDb();
@@ -139,7 +139,7 @@ const dashboardRouter = router({
 
 // ─── Quiz Router ──────────────────────────────────────────────────────────────
 const quizRouter = router({
-  getActive: protectedProcedure
+  getActive: publicProcedure
     .input(z.object({ clientId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
@@ -172,7 +172,7 @@ const quizRouter = router({
       return { ...quiz[0], questions: questionsWithOptions };
     }),
 
-  updateQuestion: protectedProcedure
+  updateQuestion: publicProcedure
     .input(
       z.object({
         questionId: z.number(),
@@ -206,7 +206,7 @@ const quizRouter = router({
 
 // ─── Logs Router ──────────────────────────────────────────────────────────────
 const logsRouter = router({
-  list: protectedProcedure
+  list: publicProcedure
     .input(z.object({ clientId: z.number(), limit: z.number().default(20) }))
     .query(async ({ input }) => {
       const db = await getDb();
@@ -222,7 +222,7 @@ const logsRouter = router({
 
 // ─── Reports Router ───────────────────────────────────────────────────────────
 const reportsRouter = router({
-  list: protectedProcedure
+  list: publicProcedure
     .input(z.object({ clientId: z.number() }))
     .query(async ({ input }) => {
       const db = await getDb();
@@ -233,7 +233,7 @@ const reportsRouter = router({
         .where(eq(monthlyReports.clientId, input.clientId))
         .orderBy(desc(monthlyReports.month));
     }),
-  generate: protectedProcedure
+  generate: publicProcedure
     .input(z.object({ clientId: z.number(), month: z.string() }))
     .mutation(async ({ input }) => {
       const db = await getDb();
@@ -294,7 +294,7 @@ const reportsRouter = router({
 
 // ─── Quiz Answers Router ────────────────────────────────────────────────────────────
 const quizAnswersRouter = router({
-  results: protectedProcedure
+  results: publicProcedure
     .input(z.object({ clientId: z.number(), month: z.string().optional() }))
     .query(async ({ input }) => {
       const db = await getDb();
