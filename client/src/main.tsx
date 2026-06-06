@@ -5,20 +5,20 @@ import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createRoot } from "react-dom/client";
 import superjson from "superjson";
 import App from "./App";
-import { getLoginUrl } from "./const";
 import "./index.css";
+
+const SESSION_KEY = "visigold_auth";
 
 const queryClient = new QueryClient();
 
 const redirectToLoginIfUnauthorized = (error: unknown) => {
   if (!(error instanceof TRPCClientError)) return;
   if (typeof window === "undefined") return;
-
   const isUnauthorized = error.message === UNAUTHED_ERR_MSG;
-
   if (!isUnauthorized) return;
-
-  window.location.href = getLoginUrl();
+  // Effacer la session et recharger
+  localStorage.removeItem(SESSION_KEY);
+  window.location.reload();
 };
 
 queryClient.getQueryCache().subscribe(event => {
@@ -42,6 +42,11 @@ const trpcClient = trpc.createClient({
     httpBatchLink({
       url: "/api/trpc",
       transformer: superjson,
+      headers() {
+        // Envoyer le token dans le header pour contourner les problèmes de cookies
+        const isAuth = localStorage.getItem(SESSION_KEY) === "true";
+        return isAuth ? { "x-visigold-auth": "authenticated" } : {};
+      },
       fetch(input, init) {
         return globalThis.fetch(input, {
           ...(init ?? {}),

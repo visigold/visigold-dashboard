@@ -26,11 +26,12 @@ export async function createContext(
 ): Promise<TrpcContext> {
   let user: User | null = null;
 
-  // Vérifier le cookie de session du dashboard (mot de passe)
+  // Vérifier l'authentification par header ou cookie
+  const authHeader = opts.req.headers["x-visigold-auth"];
   const cookieHeader = opts.req.headers.cookie || "";
   const sessionCookie = cookieHeader.split(";").find(c => c.trim().startsWith("visigold_session="))?.split("=")[1]?.trim();
 
-  if (sessionCookie === "authenticated") {
+  if (authHeader === "authenticated" || sessionCookie === "authenticated") {
     user = DASHBOARD_ADMIN_USER;
   } else {
     // Fallback: essayer l'authentification OAuth Manus
