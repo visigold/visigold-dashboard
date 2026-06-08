@@ -58,6 +58,22 @@ export function serveStatic(app: Express) {
     );
   }
 
+  // Servir le dossier quiz en statique (avant le catch-all React)
+  const quizPath = path.resolve(distPath, "quiz");
+  if (fs.existsSync(quizPath)) {
+    app.use("/quiz", express.static(quizPath));
+    app.use("/quiz/*", (req, res) => {
+      const parts = req.originalUrl.replace(/^\/?quiz\//, "").split("/");
+      const clientSlug = parts[0];
+      const quizFile = path.resolve(quizPath, clientSlug, "index.html");
+      if (fs.existsSync(quizFile)) {
+        res.sendFile(quizFile);
+      } else {
+        res.status(404).send("Quiz non trouvé");
+      }
+    });
+  }
+
   app.use(express.static(distPath));
 
   // fall through to index.html if the file doesn't exist
