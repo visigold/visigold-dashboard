@@ -14,7 +14,10 @@ function QRModal({ client, onClose, isQuiz }: { client: { id: number; name: stri
 
   const baseUrl = window.location.origin;
   const source = customSource || selectedSource;
-  const qrUrl = `${baseUrl}/scan/${client.slug}?source=${source}`;
+  // Pour le quiz, l'URL pointe vers /quiz/slug/ ; pour la réputation, vers /scan/slug?source=...
+  const qrUrl = isQuiz
+    ? `${baseUrl}/${client.slug}/`
+    : `${baseUrl}/scan/${client.slug}?source=${source}`;
 
   const generateQR = async () => {
     if (!canvasRef.current) return;
