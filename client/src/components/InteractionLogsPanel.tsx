@@ -36,7 +36,10 @@ export default function InteractionLogsPanel({ clientId }: Props) {
       ) : (
         <div className="divide-y divide-gray-100">
           {logs.map((log) => {
-            const time = format(new Date(log.createdAt), "HH:mm", { locale: fr });
+            // Convertir en heure suisse (UTC+2 en été, UTC+1 en hiver)
+            const utcDate = new Date(log.createdAt);
+            const swissTime = new Date(utcDate.toLocaleString("en-US", { timeZone: "Europe/Zurich" }));
+            const time = format(swissTime, "HH:mm", { locale: fr });
             const label = eventTypeLabels[log.eventType] ?? log.eventType;
             return (
               <div
