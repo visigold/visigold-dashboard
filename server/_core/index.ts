@@ -185,14 +185,17 @@ async function startServer() {
   // ─── Route publique Quiz (AVANT serveStatic pour éviter le catch-all React) ───
   if (process.env.NODE_ENV !== "development") {
     app.get("/quiz/:slug", (req, res) => {
-      const quizFile = path.join(
-        path.dirname(new URL(import.meta.url).pathname),
-        "public", "quiz", req.params.slug, "index.html"
-      );
-      if (fs.existsSync(quizFile)) {
+      // Essayer plusieurs chemins possibles selon l'environnement
+      const candidates = [
+        path.join(process.cwd(), "dist", "public", "quiz", req.params.slug, "index.html"),
+        path.join(path.dirname(new URL(import.meta.url).pathname), "public", "quiz", req.params.slug, "index.html"),
+        path.join(path.dirname(new URL(import.meta.url).pathname), "..", "public", "quiz", req.params.slug, "index.html"),
+      ];
+      const quizFile = candidates.find(f => fs.existsSync(f));
+      if (quizFile) {
         res.sendFile(quizFile);
       } else {
-        res.status(404).send("Quiz non trouvé");
+        res.status(404).send("Quiz non trouvé — " + candidates[0]);
       }
     });
   }
