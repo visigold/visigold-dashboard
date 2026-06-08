@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Riviera Vaudoise & Auto 🚗 - Garage Schmitt</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #0a1628;
+        }
+
+        /* ===== BACKGROUND ANIMÉ ===== */
+        .bg-animated {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background: linear-gradient(135deg, #0a1628 0%, #1a3a6b 40%, #0d2347 70%, #0a1628 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== PARTICULES VOITURE ===== */
+        .particles-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.12;
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.12; }
+            90% { opacity: 0.12; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+
+        /* ===== CONTAINER ===== */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 20px 16px 40px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ===== BANDEAU ===== */
+        .urgency-banner {
+            background: linear-gradient(90deg, #f26522, #e05510);
+            color: white;
+            text-align: center;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            animation: pulseBanner 2s ease-in-out infinite;
+            box-shadow: 0 4px 20px rgba(242,101,34,0.4);
+        }
+
+        @keyframes pulseBanner {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 20px rgba(242,101,34,0.4); }
+            50% { transform: scale(1.01); box-shadow: 0 6px 30px rgba(242,101,34,0.6); }
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            text-align: center;
+            padding: 28px 24px 24px;
+            background: rgba(255,255,255,0.07);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+        }
+
+        .garage-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .garage-logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, #1a3a6b, #2a5aab);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 4px 20px rgba(26,58,107,0.5);
+            animation: bounceEmoji 2s ease-in-out infinite;
+        }
+
+        @keyframes bounceEmoji {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .garage-logo-text {
+            text-align: left;
+        }
+
+        .garage-logo-text .name {
+            font-size: 18px;
+            font-weight: 800;
+            color: white;
+            line-height: 1;
+        }
+
+        .garage-logo-text .sub {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            font-weight: 400;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+
+        .header h1 span {
+            background: linear-gradient(90deg, #f26522, #ffaa44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .social-proof {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 14px;
+            background: rgba(242,101,34,0.1);
+            border: 1px solid rgba(242,101,34,0.3);
+            padding: 8px 16px;
+            border-radius: 30px;
+        }
+
+        .social-proof .dot {
+            width: 8px;
+            height: 8px;
+            background: #f26522;
+            border-radius: 50%;
+            animation: blink 1.5s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .social-proof span {
+            color: #f26522;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ===== PROGRESS ===== */
+        .progress-section { margin-bottom: 20px; }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-label { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500; }
+        .progress-pct { color: #f26522; font-size: 13px; font-weight: 700; }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1a3a6b, #f26522, #ffaa44);
+            border-radius: 10px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(242,101,34,0.8);
+        }
+
+        /* ===== QUESTION CARD ===== */
+        .question-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 28px 24px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            display: none;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-card.active { display: block; }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .question-number {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(242,101,34,0.15);
+            border: 1px solid rgba(242,101,34,0.3);
+            color: #f26522;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.4;
+            margin-bottom: 22px;
+        }
+
+        /* ===== OPTIONS ===== */
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: rgba(255,255,255,0.85);
+            font-size: 15px;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(242,101,34,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .option:hover {
+            border-color: rgba(242,101,34,0.5);
+            background: rgba(242,101,34,0.08);
+            transform: translateX(4px);
+        }
+
+        .option:hover::before { opacity: 1; }
+
+        .option-letter {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .option.correct {
+            border-color: #00e676;
+            background: rgba(0,230,118,0.12);
+            pointer-events: none;
+        }
+
+        .option.correct .option-letter {
+            background: #00e676;
+            color: #0a1628;
+        }
+
+        .option.wrong {
+            border-color: #ff5252;
+            background: rgba(255,82,82,0.12);
+            pointer-events: none;
+        }
+
+        .option.wrong .option-letter {
+            background: #ff5252;
+            color: white;
+        }
+
+        .option.disabled { pointer-events: none; opacity: 0.5; }
+
+        /* ===== FEEDBACK ===== */
+        .feedback {
+            margin-top: 16px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.5;
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct-feedback {
+            background: rgba(0,230,118,0.12);
+            border: 1px solid rgba(0,230,118,0.3);
+            color: #69f0ae;
+        }
+
+        .feedback.wrong-feedback {
+            background: rgba(255,82,82,0.12);
+            border: 1px solid rgba(255,82,82,0.3);
+            color: #ff8a80;
+        }
+
+        .feedback-icon { font-size: 18px; margin-right: 6px; }
+
+        /* ===== BOUTON SUIVANT ===== */
+        .next-btn {
+            width: 100%;
+            margin-top: 18px;
+            padding: 16px;
+            background: linear-gradient(135deg, #1a3a6b, #f26522);
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 20px rgba(242,101,34,0.3);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(242,101,34,0.5);
+        }
+
+        /* ===== RÉSULTAT ===== */
+        .result-screen {
+            display: none;
+            animation: slideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .result-card {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .result-trophy {
+            font-size: 64px;
+            display: block;
+            margin-bottom: 16px;
+            animation: bounceEmoji 2s ease-in-out infinite;
+        }
+
+        .result-score {
+            font-size: 52px;
+            font-weight: 800;
+            background: linear-gradient(90deg, #f26522, #ffaa44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .result-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .result-message {
+            color: rgba(255,255,255,0.75);
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .result-humor {
+            background: rgba(242,101,34,0.12);
+            border: 1px solid rgba(242,101,34,0.3);
+            border-radius: 14px;
+            padding: 14px 18px;
+            color: #ffaa44;
+            font-size: 14px;
+            font-style: italic;
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        /* ===== PARTAGE VIRAL ===== */
+        .share-section {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.12);
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .share-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 6px;
+        }
+
+        .share-subtitle {
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .share-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 20px;
+            border-radius: 14px;
+            border: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: white;
+        }
+
+        .share-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        .share-btn.whatsapp { background: linear-gradient(135deg, #25D366, #128C7E); box-shadow: 0 4px 20px rgba(37,211,102,0.3); }
+        .share-btn.facebook { background: linear-gradient(135deg, #1877F2, #0d5fd4); box-shadow: 0 4px 20px rgba(24,119,242,0.3); }
+        .share-btn.sms { background: linear-gradient(135deg, #f26522, #e05510); box-shadow: 0 4px 20px rgba(242,101,34,0.3); }
+
+        .share-btn svg { width: 22px; height: 22px; fill: white; flex-shrink: 0; }
+
+        /* ===== FOOTER GARAGE ===== */
+        .garage-footer {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 16px 20px;
+            text-align: center;
+        }
+
+        .garage-footer p {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .garage-footer strong { color: rgba(255,255,255,0.8); }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-animated"></div>
+
+<!-- Particules -->
+<div class="particles-container" id="particles"></div>
+
+<!-- Confetti -->
+<div class="confetti-container" id="confetti"></div>
+
+<div class="container">
+
+    <!-- Bandeau -->
+    <div class="urgency-banner">
+        🚗 Quiz exclusif offert par <strong>Garage Schmitt SA</strong> — Riviera Vaudoise
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="garage-logo">
+            <div class="garage-logo-icon">🔧</div>
+            <div class="garage-logo-text">
+                <div class="name">Garage Schmitt SA</div>
+                <div class="sub">Clarens — Riviera Vaudoise</div>
+            </div>
+        </div>
+        <h1>Connaissez-vous la<br><span>Riviera Vaudoise ?</span></h1>
+        <p>5 questions sur votre région et l'automobile — testez vos connaissances !</p>
+        <div class="social-proof">
+            <div class="dot"></div>
+            <span>🏆 Partagez votre score avec vos amis</span>
+        </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-section" id="progressSection">
+        <div class="progress-info">
+            <span class="progress-label">Progression</span>
+            <span class="progress-pct" id="progressPct">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Questions -->
+    <div id="quizSection">
+
+        <!-- Q1 -->
+        <div class="question-card active" id="q1">
+            <div class="question-number">🎵 Question 1 / 5</div>
+            <div class="question-text">Quel célèbre festival de musique mondialement connu se déroule chaque été sur les bords du lac à Montreux ?</div>
+            <div class="options">
+                <div class="option" onclick="answer(this, false, 1)">
+                    <div class="option-letter">A</div>
+                    <span>Le Festival de Cannes</span>
+                </div>
+                <div class="option" onclick="answer(this, true, 1)">
+                    <div class="option-letter">B</div>
+                    <span>Le Montreux Jazz Festival</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 1)">
+                    <div class="option-letter">C</div>
+                    <span>Le Paléo Festival</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 1)">
+                    <div class="option-letter">D</div>
+                    <span>Le Festival de Locarno</span>
+                </div>
+            </div>
+            <div class="feedback" id="fb1"></div>
+            <button class="next-btn" id="next1" onclick="nextQuestion(2)">Question suivante →</button>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-card" id="q2">
+            <div class="question-number">🚡 Question 2 / 5</div>
+            <div class="question-text">Comment s'appelle le célèbre funiculaire qui relie Vevey au Mont-Pèlerin ?</div>
+            <div class="options">
+                <div class="option" onclick="answer(this, false, 2)">
+                    <div class="option-letter">A</div>
+                    <span>Le funiculaire Lausanne–Ouchy</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 2)">
+                    <div class="option-letter">B</div>
+                    <span>Le funiculaire Montreux–Glion</span>
+                </div>
+                <div class="option" onclick="answer(this, true, 2)">
+                    <div class="option-letter">C</div>
+                    <span>Le funiculaire Vevey–Mont-Pèlerin</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 2)">
+                    <div class="option-letter">D</div>
+                    <span>Le funiculaire Chillon–Villeneuve</span>
+                </div>
+            </div>
+            <div class="feedback" id="fb2"></div>
+            <button class="next-btn" id="next2" onclick="nextQuestion(3)">Question suivante →</button>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-card" id="q3">
+            <div class="question-number">🎤 Question 3 / 5</div>
+            <div class="question-text">Sur les quais de Montreux, quelle célèbre statue rend hommage au leader du groupe Queen ?</div>
+            <div class="options">
+                <div class="option" onclick="answer(this, false, 3)">
+                    <div class="option-letter">A</div>
+                    <span>David Bowie</span>
+                </div>
+                <div class="option" onclick="answer(this, true, 3)">
+                    <div class="option-letter">B</div>
+                    <span>Freddie Mercury</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 3)">
+                    <div class="option-letter">C</div>
+                    <span>Mick Jagger</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 3)">
+                    <div class="option-letter">D</div>
+                    <span>Elton John</span>
+                </div>
+            </div>
+            <div class="feedback" id="fb3"></div>
+            <button class="next-btn" id="next3" onclick="nextQuestion(4)">Question suivante →</button>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-card" id="q4">
+            <div class="question-number">🎬 Question 4 / 5</div>
+            <div class="question-text">Quel cinéaste et acteur légendaire, célèbre pour son personnage de Charlot, a vécu ses dernières années à Corsier-sur-Vevey ?</div>
+            <div class="options">
+                <div class="option" onclick="answer(this, false, 4)">
+                    <div class="option-letter">A</div>
+                    <span>Buster Keaton</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 4)">
+                    <div class="option-letter">B</div>
+                    <span>Harold Lloyd</span>
+                </div>
+                <div class="option" onclick="answer(this, true, 4)">
+                    <div class="option-letter">C</div>
+                    <span>Charlie Chaplin</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 4)">
+                    <div class="option-letter">D</div>
+                    <span>Stan Laurel</span>
+                </div>
+            </div>
+            <div class="feedback" id="fb4"></div>
+            <button class="next-btn" id="next4" onclick="nextQuestion(5)">Question suivante →</button>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question-card" id="q5">
+            <div class="question-number">🍇 Question 5 / 5</div>
+            <div class="question-text">Quel est le nom du célèbre domaine viticole en terrasses, classé au patrimoine mondial de l'UNESCO, qui surplombe la Riviera ?</div>
+            <div class="options">
+                <div class="option" onclick="answer(this, false, 5)">
+                    <div class="option-letter">A</div>
+                    <span>La Côte</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 5)">
+                    <div class="option-letter">B</div>
+                    <span>Chablais</span>
+                </div>
+                <div class="option" onclick="answer(this, false, 5)">
+                    <div class="option-letter">C</div>
+                    <span>Bonvillars</span>
+                </div>
+                <div class="option" onclick="answer(this, true, 5)">
+                    <div class="option-letter">D</div>
+                    <span>Le Lavaux</span>
+                </div>
+            </div>
+            <div class="feedback" id="fb5"></div>
+            <button class="next-btn" id="next5" onclick="showResult()">Voir mon score 🏆</button>
+        </div>
+
+    </div>
+
+    <!-- Résultat -->
+    <div class="result-screen" id="resultScreen">
+
+        <div class="result-card">
+            <span class="result-trophy" id="resultTrophy">🏆</span>
+            <div class="result-score" id="resultScore">5/5</div>
+            <div class="result-title" id="resultTitle">Expert de la Riviera !</div>
+            <div class="result-message" id="resultMessage">Bravo ! Vous connaissez parfaitement votre région.</div>
+            <div class="result-humor" id="resultHumor">🔧 Chez Garage Schmitt, on prend soin de votre voiture aussi bien que vous connaissez votre région !</div>
+        </div>
+
+        <div class="share-section">
+            <div class="share-title">🚀 Défiez vos amis !</div>
+            <div class="share-subtitle">Partagez votre score et voyez s'ils font mieux</div>
+            <div class="share-buttons">
+                <a class="share-btn whatsapp" id="shareWhatsapp" href="#" target="_blank">
+                    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Partager sur WhatsApp
+                </a>
+                <a class="share-btn facebook" id="shareFacebook" href="#" target="_blank">
+                    <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    Partager sur Facebook
+                </a>
+                <a class="share-btn sms" id="shareSMS" href="#" target="_blank">
+                    <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    Envoyer par SMS
+                </a>
+            </div>
+        </div>
+
+        <div class="garage-footer">
+            <p>🔧 <strong>Garage Schmitt SA</strong> — Clarens, Riviera Vaudoise<br>
+            Votre partenaire automobile de confiance depuis des années.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+    let score = 0;
+    let currentQ = 1;
+    const totalQ = 5;
+
+    const humors = [
+        "Bravo ! On aime le bon son, autant que le ronronnement d'un moteur bien réglé. 🎵",
+        "Une sacrée montée ! Heureusement, chez nous, on vérifie vos freins pour la descente. 🚡",
+        "The Show Must Go On ! On s'assure que votre voiture tienne la route aussi longtemps que ses tubes. 🎤",
+        "Un génie du mouvement. On s'occupe du vôtre pour que vous restiez mobile. 🎬",
+        "Magnifique ! Mais attention : le vin pour la cave, l'huile pour le moteur, ne vous trompez pas ! 🍷"
+    ];
+
+    const wrongHumors = [
+        "Pas tout à fait ! La bonne réponse est le Montreux Jazz Festival. Mais votre voiture, elle, ne se trompe jamais avec nous ! 🎵",
+        "Presque ! C'est le funiculaire Vevey–Mont-Pèlerin. Nos mécaniciens, eux, ne ratent jamais leur cible. 🔧",
+        "Ce n'est pas ça ! C'est Freddie Mercury qui trône sur les quais. Nos réparations, elles, sont dignes d'un champion. 🏆",
+        "Raté ! C'est Charlie Chaplin qui a vécu à Corsier. Mais ne vous inquiétez pas, votre voiture est entre de bonnes mains. 🎬",
+        "Pas tout à fait ! C'est le Lavaux, classé UNESCO. Nos prestations, elles, méritent aussi leur étoile ! ⭐"
+    ];
+
+    // Générer les particules
+    const particlesContainer = document.getElementById('particles');
+    for (let i = 0; i < 15; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 60 + 20;
+        p.style.cssText = `
+            width: ${size}px; height: ${size}px;
+            left: ${Math.random() * 100}%;
+            background: ${Math.random() > 0.5 ? 'rgba(242,101,34,0.3)' : 'rgba(26,58,107,0.3)'};
+            animation-duration: ${Math.random() * 15 + 10}s;
+            animation-delay: ${Math.random() * 10}s;
+        `;
+        particlesContainer.appendChild(p);
+    }
+
+    function updateProgress() {
+        const pct = Math.round(((currentQ - 1) / totalQ) * 100);
+        document.getElementById('progressFill').style.width = pct + '%';
+        document.getElementById('progressPct').textContent = pct + '%';
+    }
+
+    function answer(el, isCorrect, qNum) {
+        const options = el.parentElement.querySelectorAll('.option');
+        options.forEach(opt => opt.classList.add('disabled'));
+
+        const feedback = document.getElementById('fb' + qNum);
+        const nextBtn = document.getElementById('next' + qNum);
+
+        if (isCorrect) {
+            el.classList.add('correct');
+            score++;
+            feedback.className = 'feedback correct-feedback';
+            feedback.innerHTML = `<span class="feedback-icon">✅</span> Bonne réponse ! ${humors[qNum - 1]}`;
+        } else {
+            el.classList.add('wrong');
+            // Highlight correct answer
+            options.forEach(opt => {
+                if (opt.getAttribute('onclick').includes('true')) opt.classList.add('correct');
+            });
+            feedback.className = 'feedback wrong-feedback';
+            feedback.innerHTML = `<span class="feedback-icon">❌</span> ${wrongHumors[qNum - 1]}`;
+        }
+
+        feedback.style.display = 'block';
+        nextBtn.style.display = 'block';
+
+        // Enregistrer dans le dashboard Visigold
+        trackQuizAnswer(qNum, isCorrect);
+    }
+
+    function nextQuestion(qNum) {
+        document.getElementById('q' + (qNum - 1)).classList.remove('active');
+        document.getElementById('q' + qNum).classList.add('active');
+        currentQ = qNum;
+        updateProgress();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showResult() {
+        document.getElementById('quizSection').style.display = 'none';
+        document.getElementById('progressSection').style.display = 'none';
+        document.getElementById('resultScreen').style.display = 'block';
+
+        // Score et messages
+        const scoreEl = document.getElementById('resultScore');
+        const titleEl = document.getElementById('resultTitle');
+        const msgEl = document.getElementById('resultMessage');
+        const humorEl = document.getElementById('resultHumor');
+        const trophyEl = document.getElementById('resultTrophy');
+
+        scoreEl.textContent = score + '/5';
+
+        if (score === 5) {
+            trophyEl.textContent = '🏆';
+            titleEl.textContent = 'Expert de la Riviera !';
+            msgEl.textContent = 'Impressionnant ! Vous connaissez parfaitement votre région. Vous êtes un vrai Rivierain !';
+            humorEl.textContent = '🔧 Chez Garage Schmitt, on prend soin de votre voiture aussi bien que vous connaissez votre région !';
+        } else if (score >= 3) {
+            trophyEl.textContent = '🥈';
+            titleEl.textContent = 'Bon Rivierain !';
+            msgEl.textContent = 'Pas mal du tout ! Vous connaissez bien votre région. Encore quelques détails à découvrir.';
+            humorEl.textContent = '🔧 Comme votre voiture après un service chez nous — presque parfait, mais on peut toujours faire mieux !';
+        } else {
+            trophyEl.textContent = '🎓';
+            titleEl.textContent = 'À découvrir !';
+            msgEl.textContent = 'La Riviera Vaudoise a encore des secrets pour vous. Une belle région à explorer !';
+            humorEl.textContent = '🔧 Pas de panique ! Chez Garage Schmitt, on repart toujours de zéro pour vous offrir le meilleur service.';
+        }
+
+        // Confetti
+        launchConfetti();
+
+        // Liens de partage
+        const shareText = `J'ai obtenu ${score}/5 au quiz Riviera Vaudoise & Auto du Garage Schmitt ! 🚗 Testez-vous aussi :`;
+        const shareUrl = window.location.href;
+
+        document.getElementById('shareWhatsapp').href =
+            `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+        document.getElementById('shareFacebook').href =
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
+        document.getElementById('shareSMS').href =
+            `sms:?body=${encodeURIComponent(shareText + ' ' + shareUrl)}`;
+
+        // Tracker les partages
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const channel = btn.classList.contains('whatsapp') ? 'whatsapp' :
+                               btn.classList.contains('facebook') ? 'facebook' : 'sms';
+                trackShare(channel);
+            });
+        });
+
+        // Enregistrer le résultat final
+        trackQuizComplete(score);
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function launchConfetti() {
+        const container = document.getElementById('confetti');
+        const colors = ['#f26522', '#1a3a6b', '#ffaa44', '#ffffff', '#00e676'];
+        for (let i = 0; i < 60; i++) {
+            setTimeout(() => {
+                const piece = document.createElement('div');
+                piece.className = 'confetti-piece';
+                piece.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    width: ${Math.random() * 10 + 5}px;
+                    height: ${Math.random() * 10 + 5}px;
+                    border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+                    animation-duration: ${Math.random() * 2 + 2}s;
+                    animation-delay: ${Math.random() * 0.5}s;
+                `;
+                container.appendChild(piece);
+                setTimeout(() => piece.remove(), 4000);
+            }, i * 50);
+        }
+    }
+
+    // ===== CONNEXION DASHBOARD VISIGOLD =====
+    const CLIENT_SLUG = 'garage-schmitt';
+    const DASHBOARD_URL = 'https://admin.visigold.ch';
+
+    function trackQuizAnswer(questionNum, isCorrect) {
+        fetch(`${DASHBOARD_URL}/api/quiz-track`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clientSlug: CLIENT_SLUG,
+                event: 'answer',
+                questionNum,
+                isCorrect,
+                source: 'spray'
+            })
+        }).catch(() => {});
+    }
+
+    function trackQuizComplete(finalScore) {
+        fetch(`${DASHBOARD_URL}/api/quiz-track`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clientSlug: CLIENT_SLUG,
+                event: 'complete',
+                score: finalScore,
+                total: 5,
+                source: 'spray'
+            })
+        }).catch(() => {});
+    }
+
+    function trackShare(channel) {
+        fetch(`${DASHBOARD_URL}/api/quiz-track`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clientSlug: CLIENT_SLUG,
+                event: 'share',
+                channel,
+                source: 'spray'
+            })
+        }).catch(() => {});
+    }
+
+    // Init
+    updateProgress();
+</script>
+
+</body>
+</html>

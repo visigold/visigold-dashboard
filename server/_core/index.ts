@@ -121,6 +121,37 @@ async function startServer() {
   });
 
   // tRPC API
+  // Route de tracking quiz public
+  app.post("/api/quiz-track", async (req, res) => {
+    try {
+      const { clientSlug, event, source, score, total, channel, questionNum, isCorrect } = req.body || {};
+      if (!clientSlug || !event) return res.json({ ok: false });
+      const { getDb } = await import("../db");
+      const { clients, interactionLogs, quizSessions } = await import("../../drizzle/schema");
+      const { eq } = await import("drizzle-orm");
+      const db = await getDb();
+      if (db) {
+        const clientResult = await db.select().from(clients).where(eq(clients.slug, clientSlug)).limit(1);
+        if (clientResult[0]) {
+          const clientId = clientResult[0].id;
+          const month = new Date().toISOString().slice(0, 7);
+          await db.insert(interactionLogs).values({
+            clientId,
+            eventType: event === 'share' ? 'quiz_share' : event === 'complete' ? 'quiz_completed' : 'quiz_answer',
+            message: event === 'share' ? `via ${channel}` : event === 'complete' ? `score ${score}/${total}` : `Q${questionNum} ${isCorrect ? 'correct' : 'wrong'}`,
+            metadata: JSON.stringify({ source, event, channel, score, total, questionNum, isCorrect }),
+          });
+          if (event === 'complete') {
+            await db.insert(quizSessions).values({ clientId, quizId: 0, completed: true, month });
+          }
+        }
+      }
+      res.json({ ok: true });
+    } catch (e) {
+      res.json({ ok: false });
+    }
+  });
+
   // Route de session pour l'authentification par mot de passe
   app.post("/api/session", (req, res) => {
     const { token } = req.body || {};
