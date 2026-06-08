@@ -6,7 +6,7 @@ import QRCode from "qrcode";
 
 const QR_SOURCES = ["comptoir", "vitrine", "salle-attente", "caisse", "entrée", "table"];
 
-function QRModal({ client, onClose }: { client: { id: number; name: string; slug: string }; onClose: () => void }) {
+function QRModal({ client, onClose, isQuiz }: { client: { id: number; name: string; slug: string }; onClose: () => void; isQuiz?: boolean }) {
   const [selectedSource, setSelectedSource] = useState("comptoir");
   const [customSource, setCustomSource] = useState("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -39,7 +39,9 @@ function QRModal({ client, onClose }: { client: { id: number; name: string; slug
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-base font-semibold text-gray-900">Générateur QR Code</h3>
+          <h3 className="text-base font-semibold text-gray-900">
+          {isQuiz ? '🎯 QR Code Quiz Viral' : '⭐ QR Code Réputation'}
+        </h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="w-5 h-5" />
           </button>
@@ -231,6 +233,7 @@ export default function ClientsPage() {
   const { data: clients, refetch } = trpc.clients.list.useQuery();
   const [showForm, setShowForm] = useState(false);
   const [qrClient, setQrClient] = useState<{ id: number; name: string; slug: string } | null>(null);
+  const [qrQuizClient, setQrQuizClient] = useState<{ id: number; name: string; slug: string } | null>(null);
   type ClientType = NonNullable<typeof clients>[number];
   const [editClient, setEditClient] = useState<ClientType | null>(null);
   const [form, setForm] = useState({ name: "", slug: "", industry: "", city: "", googlePlaceId: "" });
@@ -257,6 +260,13 @@ export default function ClientsPage() {
   return (
     <div className="space-y-6">
       {qrClient && <QRModal client={qrClient} onClose={() => setQrClient(null)} />}
+      {qrQuizClient && (
+        <QRModal
+          client={{ ...qrQuizClient, slug: `quiz/${qrQuizClient.slug}` }}
+          onClose={() => setQrQuizClient(null)}
+          isQuiz={true}
+        />
+      )}
       {editClient && (
         <EditClientModal
           client={editClient as { id: number; name: string; slug: string; industry?: string | null; city?: string | null; googlePlaceId?: string | null }}
@@ -395,15 +405,26 @@ export default function ClientsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-1.5">
+                      <div className="flex items-center gap-2">
                       <button
                         onClick={() => setQrClient({ id: client.id, name: client.name, slug: client.slug })}
                         className="flex items-center gap-1 text-xs text-[#1a3a6b] hover:text-[#f26522] font-medium transition-colors"
-                        title="Générer QR code"
+                        title="QR Code Réputation"
                       >
                         <QrCode className="w-3.5 h-3.5" />
-                        QR Code
+                        <span className="text-[#1a3a6b]">Réputation</span>
                       </button>
+                      <span className="text-gray-200">|</span>
+                      <button
+                        onClick={() => setQrQuizClient({ id: client.id, name: client.name, slug: client.slug })}
+                        className="flex items-center gap-1 text-xs text-[#f26522] hover:text-orange-600 font-medium transition-colors"
+                        title="QR Code Quiz Viral"
+                      >
+                        <QrCode className="w-3.5 h-3.5" />
+                        <span>Quiz Viral</span>
+                      </button>
+                      </div>
                       <span className="text-gray-200">|</span>
                       <button
                         onClick={() => setEditClient(client as typeof editClient)}
