@@ -37,6 +37,9 @@ export const clients = mysqlTable("clients", {
   privacyPolicyUrl: varchar("privacyPolicyUrl", { length: 500 }),
   leadCollectionEnabled: boolean("leadCollectionEnabled").default(false).notNull(),
   consentText: text("consentText"),
+  clientUsername: varchar("clientUsername", { length: 100 }).unique(), // Pour l'accès client
+  clientPassword: varchar("clientPassword", { length: 255 }), // Hash du mot de passe
+  clientAccessEnabled: boolean("clientAccessEnabled").default(false).notNull(), // Activer/désactiver l'accès client
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
 });
