@@ -1,7 +1,7 @@
 import { trpc } from "@/lib/trpc";
 import { useClientContext } from "@/contexts/ClientContext";
 import {
-  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, PieChart, Pie, Cell,
 } from "recharts";
 import { TrendingUp, Star, CheckSquare, Activity } from "lucide-react";
 
@@ -32,6 +32,9 @@ export default function PerformancePage() {
     name: monthLabels[d.month.slice(5)] ?? d.month,
     scans: d.scans,
   }));
+
+  // Couleurs pour le graphique camembert
+  const COLORS = ['#1a3a6b', '#ff6b35', '#f7931e', '#4ecdc4', '#95e1d3', '#f38181'];
 
   const kpis = [
     { label: "Total scans", value: stats?.totalScans ?? 0, icon: Activity, color: "text-[#1a3a6b]", bg: "bg-blue-50" },
@@ -86,6 +89,45 @@ export default function PerformancePage() {
           </ResponsiveContainer>
         </div>
       </div>
+
+      {/* Graphique de répartition par source (emplacement) */}
+      {(stats?.scansBySource ?? []).length > 0 && (
+        <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <h3 className="text-sm font-semibold text-gray-800 mb-4">Répartition des scans par emplacement</h3>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={stats?.scansBySource ?? []}
+                  dataKey="count"
+                  nameKey="source"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={80}
+                  label
+                >
+                  {(stats?.scansBySource ?? []).map((entry: any, index: number) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+            <div className="flex flex-col justify-center">
+              <h4 className="text-xs font-semibold text-gray-700 mb-3">Détails par emplacement</h4>
+              {(stats?.scansBySource ?? []).map((item: { source: string; count: number }, index: number) => (
+                <div key={item.source} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 rounded" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                    <span className="text-xs text-gray-700">{item.source}</span>
+                  </div>
+                  <span className="text-xs font-semibold text-gray-900">{item.count} scans</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
