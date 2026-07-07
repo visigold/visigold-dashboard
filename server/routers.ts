@@ -87,6 +87,7 @@ const dashboardRouter = router({
           avgRating: "0.0",
           completionRate: 0,
           scanTraffic: [],
+          scansBySource: [],
         };
       }
 
@@ -100,6 +101,17 @@ const dashboardRouter = router({
         .groupBy(scanEvents.month)
         .orderBy(scanEvents.month)
         .limit(7);
+
+      // Ajouter le tracking par source (emplacement)
+      const scansBySource = await db
+        .select({
+          source: scanEvents.source,
+          count: sql<number>`count(*)`,
+        })
+        .from(scanEvents)
+        .where(and(eq(scanEvents.clientId, input.clientId), eq(scanEvents.month, currentMonth)))
+        .groupBy(scanEvents.source)
+        .orderBy(desc(sql<number>`count(*)`));
 
       const reviewsThisMonth = await db
         .select({
@@ -132,6 +144,10 @@ const dashboardRouter = router({
         scanTraffic: scanTraffic.map((s: { month: string; count: number }) => ({
           month: s.month,
           scans: Number(s.count),
+        })),
+        scansBySource: scansBySource.map((s: { source: string | null; count: number }) => ({
+          source: s.source || "Non spécifié",
+          count: Number(s.count),
         })),
       };
     }),
