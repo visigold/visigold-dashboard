@@ -202,3 +202,5 @@ export function ClientDashboardPage() {
     </div>
   );
 }
+
+export default ClientDashboardPage;

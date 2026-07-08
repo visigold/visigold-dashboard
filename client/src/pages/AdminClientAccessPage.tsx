@@ -285,3 +285,5 @@ export function AdminClientAccessPage() {
     </div>
   );
 }
+
+export default AdminClientAccessPage;

@@ -128,3 +128,5 @@ export function ClientLoginPage() {
     </div>
   );
 }
+
+export default ClientLoginPage;
