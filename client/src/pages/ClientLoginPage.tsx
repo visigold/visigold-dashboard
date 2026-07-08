@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 import { trpc } from "../utils/trpc";
 import { Lock, User, AlertCircle } from "lucide-react";
 
 export function ClientLoginPage() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -29,7 +29,7 @@ export function ClientLoginPage() {
         localStorage.setItem("clientId", String(result.clientId));
 
         // Rediriger vers le dashboard client
-        navigate("/client-dashboard");
+        setLocation("/client-dashboard");
       }
     } catch (err: any) {
       setError(err.message || "Authentication failed");

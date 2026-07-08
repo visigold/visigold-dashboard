@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "wouter";
 import { trpc } from "../utils/trpc";
 import { LogOut, QrCode, TrendingUp, BarChart3, PieChart } from "lucide-react";
 import { LineChart, Line, PieChart as RechartsPie, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
 export function ClientDashboardPage() {
-  const navigate = useNavigate();
+  const [, setLocation] = useLocation();
   const [clientId, setClientId] = useState<number | null>(null);
   const [month, setMonth] = useState(new Date().toISOString().slice(0, 7));
   const [isLoading, setIsLoading] = useState(true);
@@ -16,12 +16,12 @@ export function ClientDashboardPage() {
     const token = localStorage.getItem("clientToken");
 
     if (!storedClientId || !token) {
-      navigate("/client-login");
+      setLocation("/client-login");
       return;
     }
 
     setClientId(Number(storedClientId));
-  }, [navigate]);
+  }, [setLocation]);
 
   // Récupérer les stats du dashboard
   const { data: stats, isLoading: statsLoading } = trpc.dashboard.stats.useQuery(
@@ -36,7 +36,7 @@ export function ClientDashboardPage() {
   const handleLogout = () => {
     localStorage.removeItem("clientToken");
     localStorage.removeItem("clientId");
-    navigate("/client-login");
+    setLocation("/client-login");
   };
 
   if (!clientId) {
