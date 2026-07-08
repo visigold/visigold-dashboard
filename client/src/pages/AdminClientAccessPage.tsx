@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../lib/trpc";
 import { User, Lock, Check, X, AlertCircle, Loader } from "lucide-react";
 
 export function AdminClientAccessPage() {
