@@ -17,6 +17,8 @@ import {
 } from "../drizzle/schema";
 import { eq, and, desc, sql } from "drizzle-orm";
 import { z } from "zod";
+import { authenticateClient, setClientCredentials, disableClientAccess } from "./auth/clientAuth";
+import { generateClientToken } from "./auth/clientSession";
 
 // ─── Clients Router ───────────────────────────────────────────────────────────
 const clientsRouter = router({
@@ -68,6 +70,30 @@ const clientsRouter = router({
       if (!db) throw new Error("Database unavailable");
       const { id, ...data } = input;
       await db.update(clients).set(data).where(eq(clients.id, id));
+      return { success: true };
+    }),
+  setCredentials: publicProcedure
+    .input(
+      z.object({
+        clientId: z.number(),
+        username: z.string().min(3),
+        password: z.string().min(8),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const result = await setClientCredentials(input.clientId, input.username, input.password);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      return { success: true };
+    }),
+  disableAccess: publicProcedure
+    .input(z.object({ clientId: z.number() }))
+    .mutation(async ({ input }) => {
+      const result = await disableClientAccess(input.clientId);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
       return { success: true };
     }),
 });
@@ -332,6 +358,27 @@ const quizAnswersRouter = router({
     }),
 });
 
+// ─── Client Auth Router ───────────────────────────────────────────────────────
+const clientAuthRouter = router({
+  login: publicProcedure
+    .input(
+      z.object({
+        username: z.string().min(1),
+        password: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const authResult = await authenticateClient(input.username, input.password);
+
+      if (!authResult.success) {
+        throw new Error(authResult.error || "Authentication failed");
+      }
+
+      const token = generateClientToken(authResult.clientId!, input.username);
+      return { success: true, token, clientId: authResult.clientId };
+    }),
+});
+
 // ─── App Router ────────────────────────────────────────────────────────────────────────────────
 export const appRouter = router({
   system: systemRouter,
@@ -343,6 +390,7 @@ export const appRouter = router({
       return { success: true } as const;
     }),
   }),
+  clientAuth: clientAuthRouter,
   clients: clientsRouter,
   dashboard: dashboardRouter,
   quiz: quizRouter,
