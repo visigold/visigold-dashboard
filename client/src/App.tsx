@@ -14,6 +14,9 @@ import QuizPage from "./pages/QuizPage";
 import ReportsPage from "./pages/ReportsPage";
 import SettingsPage from "./pages/SettingsPage";
 import LoginPage, { isAuthenticated, logout } from "./pages/LoginPage";
+import AdminClientAccessPage from "./pages/AdminClientAccessPage";
+import ClientLoginPage from "./pages/ClientLoginPage";
+import ClientDashboardPage from "./pages/ClientDashboardPage";
 
 function Router({ onLogout }: { onLogout: () => void }) {
   return (
@@ -25,6 +28,7 @@ function Router({ onLogout }: { onLogout: () => void }) {
         <Route path="/quiz" component={QuizPage} />
         <Route path="/reports" component={ReportsPage} />
         <Route path="/settings" component={SettingsPage} />
+        <Route path="/admin/client-access" component={AdminClientAccessPage} />
         <Route path="/404" component={NotFound} />
         <Route component={NotFound} />
       </Switch>
@@ -50,11 +54,20 @@ function App() {
         <ClientProvider>
           <TooltipProvider>
             <Toaster />
-            {authenticated ? (
-              <Router onLogout={handleLogout} />
-            ) : (
-              <LoginPage onSuccess={() => setAuthenticated(true)} />
-            )}
+            <Switch>
+              {/* Routes publiques pour les clients */}
+              <Route path="/client-login" component={ClientLoginPage} />
+              <Route path="/client-dashboard" component={ClientDashboardPage} />
+              
+              {/* Routes protégées pour l'admin */}
+              <Route path="/:rest*">
+                {authenticated ? (
+                  <Router onLogout={handleLogout} />
+                ) : (
+                  <LoginPage onSuccess={() => setAuthenticated(true)} />
+                )}
+              </Route>
+            </Switch>
           </TooltipProvider>
         </ClientProvider>
       </ThemeProvider>
