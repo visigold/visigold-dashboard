@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "wouter";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../lib/trpc";
 import { Lock, User, AlertCircle } from "lucide-react";
 
 export function ClientLoginPage() {
