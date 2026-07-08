@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { trpc } from "../utils/trpc";
+import { trpc } from "../lib/trpc";
 import { LogOut, QrCode, TrendingUp, BarChart3, PieChart } from "lucide-react";
 import { LineChart, Line, PieChart as RechartsPie, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
